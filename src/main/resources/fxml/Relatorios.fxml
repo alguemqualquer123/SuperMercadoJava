@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.supermercado.controller.RelatoriosController" styleClass="main-container">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Relatórios Financeiros" styleClass="page-title"/>
+
+    <GridPane hgap="15" vgap="15">
+        <Label text="Data Início:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <DatePicker fx:id="dpInicio" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+        <Label text="Data Fim:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <DatePicker fx:id="dpFim" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <Button text="Gerar Relatório (PDF)" onAction="#gerarPDF" styleClass="btn-primary" 
+                GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+    </GridPane>
+
+    <Label fx:id="lblStatus" text="" style="-fx-text-fill: green;"/>
+
+</VBox>

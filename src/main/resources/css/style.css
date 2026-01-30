@@ -1,0 +1,278 @@
+/* ========== CORES GLOBAIS ========== */
+:root {
+    -fx-primary-color: #2196F3;
+    -fx-primary-dark: #1976D2;
+    -fx-success-color: #4CAF50;
+    -fx-danger-color: #F44336;
+    -fx-warning-color: #FF9800;
+    -fx-background-light: #F5F5F5;
+    -fx-text-dark: #212121;
+}
+
+/* ========== ESTILOS GERAIS ========== */
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 14px;
+}
+
+/* ========== LOGIN ========== */
+.login-container {
+    -fx-background-color: linear-gradient(to bottom, #2196F3, #1976D2);
+    -fx-padding: 40;
+}
+
+.login-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-fill: white;
+}
+
+.login-subtitle {
+    -fx-font-size: 16px;
+    -fx-fill: white;
+    -fx-opacity: 0.9;
+}
+
+.form-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.hint-text {
+    -fx-font-size: 11px;
+    -fx-fill: white;
+    -fx-opacity: 0.7;
+}
+
+.error-label {
+    -fx-text-fill: #F44336;
+    -fx-font-weight: bold;
+    -fx-background-color: white;
+    -fx-padding: 5 10;
+    -fx-background-radius: 3;
+}
+
+/* ========== BOTÕES ========== */
+.button {
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.btn-primary {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-padding: 10 20;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #1976D2;
+}
+
+.btn-secondary {
+    -fx-background-color: #757575;
+    -fx-text-fill: white;
+    -fx-padding: 8 15;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #616161;
+}
+
+.btn-success {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-padding: 8 15;
+}
+
+.btn-success:hover {
+    -fx-background-color: #388E3C;
+}
+
+.btn-success-big {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 15 30;
+}
+
+.btn-success-big:hover {
+    -fx-background-color: #388E3C;
+}
+
+.btn-danger {
+    -fx-background-color: #F44336;
+    -fx-text-fill: white;
+    -fx-padding: 8 15;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #D32F2F;
+}
+
+.btn-danger-small {
+    -fx-background-color: #F44336;
+    -fx-text-fill: white;
+    -fx-padding: 4 10;
+    -fx-font-size: 12px;
+}
+
+.btn-danger-small:hover {
+    -fx-background-color: #D32F2F;
+}
+
+.btn-warning {
+    -fx-background-color: #FF9800;
+    -fx-text-fill: white;
+    -fx-padding: 8 15;
+}
+
+.btn-warning:hover {
+    -fx-background-color: #F57C00;
+}
+
+/* ========== CAMPOS DE TEXTO ========== */
+.text-field,
+.password-field {
+    -fx-background-radius: 4;
+    -fx-padding: 8 12;
+    -fx-border-color: #BDBDBD;
+    -fx-border-radius: 4;
+}
+
+.text-field:focused,
+.password-field:focused {
+    -fx-border-color: #2196F3;
+    -fx-border-width: 2;
+}
+
+/* ========== TOOLBAR ========== */
+.toolbar {
+    -fx-background-color: #E3F2FD;
+    -fx-border-color: #BBDEFB;
+    -fx-border-width: 0 0 2 0;
+}
+
+.toolbar-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #1976D2;
+}
+
+/* ========== MAIN CONTAINER ========== */
+.main-container {
+    -fx-background-color: white;
+}
+
+.page-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-fill: #212121;
+}
+
+/* ========== TABELA ========== */
+.table-view {
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+}
+
+.table-view .column-header {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #2196F3;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #FAFAFA;
+}
+
+.table-row-cell:even {
+    -fx-background-color: white;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #BBDEFB;
+}
+
+/* ========== TOTAIS ========== */
+.total-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.total-value {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2196F3;
+}
+
+.total-label-big {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.total-value-big {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4CAF50;
+}
+
+/* ========== MENU BAR ========== */
+.menu-bar {
+    -fx-background-color: #1976D2;
+}
+
+.menu-bar .label {
+    -fx-text-fill: white;
+}
+
+.menu-bar .menu:hover {
+    -fx-background-color: #1565C0;
+}
+
+.context-menu {
+    -fx-background-color: white;
+    -fx-border-color: #BDBDBD;
+    -fx-border-width: 1;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+}
+
+.context-menu .label {
+    -fx-text-fill: #212121;
+    /* Texto escuro no fundo branco */
+}
+
+.menu-item:focused {
+    -fx-background-color: #1976D2;
+}
+
+.menu-item:focused .label {
+    -fx-text-fill: white;
+    /* Texto branco quando selecionado/hover */
+}
+
+/* ========== COMBOBOX ========== */
+.combo-box {
+    -fx-background-radius: 4;
+    -fx-padding: 5;
+}
+
+/* ========== SCROLLBAR ========== */
+.scroll-bar {
+    -fx-background-color: #F5F5F5;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #BDBDBD;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #9E9E9E;
+}

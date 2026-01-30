@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.supermercado.controller.LoginController"
+      alignment="CENTER"
+      spacing="15"
+      styleClass="login-container">
+    
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+    
+    <Text text="SuperMercado PDV" styleClass="login-title"/>
+    <Text text="Sistema de Ponto de Venda" styleClass="login-subtitle"/>
+    
+    <VBox spacing="10" maxWidth="300">
+        <Label text="Usuário:" styleClass="form-label"/>
+        <TextField fx:id="usernameField" promptText="Digite seu usuário"/>
+        
+        <Label text="Senha:" styleClass="form-label"/>
+        <PasswordField fx:id="passwordField" promptText="Digite sua senha"/>
+        
+
+
+        
+        <Button fx:id="loginButton" text="Entrar" onAction="#handleLogin" 
+                maxWidth="Infinity" styleClass="btn-primary"/>
+        
+        <Label fx:id="errorLabel" styleClass="error-label" visible="false"/>
+    </VBox>
+    
+    <VBox spacing="5" alignment="CENTER">
+        <Text text="Usuário padrão: admin" styleClass="hint-text"/>
+        <Text text="Senha padrão: admin123" styleClass="hint-text"/>
+    </VBox>
+</VBox>

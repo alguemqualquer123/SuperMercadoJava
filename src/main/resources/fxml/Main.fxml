@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.supermercado.controller.MainController">
+    
+    <!-- Top Menu Bar -->
+    <top>
+        <VBox>
+            <MenuBar>
+                <Menu text="Arquivo">
+                    <MenuItem text="Logout" onAction="#handleLogout"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Sair" onAction="#handleExit"/>
+                </Menu>
+                <Menu text="Cadastros">
+                    <MenuItem text="Produtos" onAction="#handleProdutos"/>
+                    <MenuItem text="Categorias" onAction="#handleCategorias"/>
+                    <MenuItem text="Usuários" onAction="#handleUsuarios"/>
+                </Menu>
+                <Menu text="Painel">
+                    <MenuItem text="Dashboard" onAction="#handleDashboard"/>
+                </Menu>
+                <Menu text="Estoque">
+                    <MenuItem text="Fornecedores" onAction="#handleFornecedores"/>
+                    <MenuItem text="Entrada de Mercadoria (Compras)" onAction="#handleCompras"/>
+                </Menu>
+                <Menu text="Relatórios">
+                    <MenuItem text="Financeiro Detalhado (PDF)" onAction="#handleRelatorioFinanceiro"/>
+                    <MenuItem text="Vendas do Dia" onAction="#handleRelatorioVendasDia"/>
+                    <MenuItem text="Produtos Mais Vendidos" onAction="#handleRelatorioProdutosMaisVendidos"/>
+                </Menu>
+                <Menu text="Ajuda">
+                    <MenuItem text="Sobre" onAction="#handleSobre"/>
+                </Menu>
+            </MenuBar>
+            
+            <HBox styleClass="toolbar" spacing="10" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets top="5" right="10" bottom="5" left="10"/>
+                </padding>
+                <Label fx:id="usuarioLabel" text="Usuário: " styleClass="toolbar-label"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="dataHoraLabel" text="Data/Hora" styleClass="toolbar-label"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <!-- Center - PDV -->
+    <center>
+        <VBox spacing="10" styleClass="main-container">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            
+            <Text text="Ponto de Venda (PDV)" styleClass="page-title"/>
+            
+            <!-- Busca de produto -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Código de Barras:" styleClass="form-label"/>
+                <TextField fx:id="codigoBarrasField" 
+                          promptText="Digite ou escaneie o código de barras" 
+                          HBox.hgrow="ALWAYS"
+                          onAction="#handleAdicionarProduto"/>
+                <TextField fx:id="quantidadeField" 
+                          promptText="Qtd" 
+                          text="1"
+                          prefWidth="60"/>
+                <Button text="Adicionar" 
+                       onAction="#handleAdicionarProduto" 
+                       styleClass="btn-primary"/>
+                <Button text="Buscar por Nome" 
+                       onAction="#handleBuscarProduto" 
+                       styleClass="btn-secondary"/>
+            </HBox>
+            
+            <!-- Tabela de itens -->
+            <TableView fx:id="itensTableView" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colCodigo" text="Código" prefWidth="120"/>
+                    <TableColumn fx:id="colNome" text="Produto" prefWidth="300"/>
+                    <TableColumn fx:id="colQuantidade" text="Qtd" prefWidth="80"/>
+                    <TableColumn fx:id="colPrecoUnitario" text="Preço Unit." prefWidth="100"/>
+                    <TableColumn fx:id="colSubtotal" text="Subtotal" prefWidth="100"/>
+                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="100"/>
+                </columns>
+            </TableView>
+            
+            <!-- Totais e ações -->
+            <HBox spacing="15" alignment="CENTER">
+                <VBox spacing="5" HBox.hgrow="ALWAYS" alignment="CENTER_LEFT">
+                    <Button text="Remover Item Selecionado" 
+                           onAction="#handleRemoverItem" 
+                           styleClass="btn-danger"/>
+                    <Button text="Limpar Venda" 
+                           onAction="#handleLimparVenda" 
+                           styleClass="btn-warning"/>
+                </VBox>
+                
+                <VBox spacing="10" alignment="CENTER_RIGHT" minWidth="400">
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Label text="Subtotal:" styleClass="total-label"/>
+                        <Label fx:id="subtotalLabel" text="R$ 0,00" styleClass="total-value"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Label text="Desconto (%):" styleClass="form-label"/>
+                        <TextField fx:id="descontoField" 
+                                  text="0" 
+                                  prefWidth="80"
+                                  onAction="#handleAplicarDesconto"/>
+                        <Button text="Aplicar" 
+                               onAction="#handleAplicarDesconto" 
+                               styleClass="btn-secondary"/>
+                    </HBox>
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Label text="TOTAL:" styleClass="total-label-big"/>
+                        <Label fx:id="totalLabel" text="R$ 0,00" styleClass="total-value-big"/>
+                    </HBox>
+                    <Button fx:id="finalizarButton" 
+                           text="F12 - FINALIZAR VENDA" 
+                           onAction="#handleFinalizarVenda" 
+                           styleClass="btn-success-big"
+                           maxWidth="Infinity"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

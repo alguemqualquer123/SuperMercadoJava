@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.supermercado.controller.DashboardController" styleClass="main-container">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Painel de Controle (Dashboard)" styleClass="page-title"/>
+
+    <HBox spacing="20">
+        <VBox style="-fx-background-color: #E3F2FD; -fx-padding: 20; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+            <Label text="Vendas Hoje" styleClass="total-label"/>
+            <Label fx:id="lblVendasHoje" text="R$ 0,00" styleClass="total-value-big"/>
+        </VBox>
+        <VBox style="-fx-background-color: #E8F5E9; -fx-padding: 20; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
+            <Label text="Qtd. Vendas" styleClass="total-label"/>
+            <Label fx:id="lblQtdVendas" text="0" styleClass="total-value-big"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <BarChart fx:id="vendasChart" title="Vendas por Categoria">
+            <xAxis>
+                <CategoryAxis label="Categorias"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis label="Valor (R$)"/>
+            </yAxis>
+        </BarChart>
+        
+        <PieChart fx:id="estoqueChart" title="Distribuição de Estoque"/>
+    </HBox>
+
+</VBox>
