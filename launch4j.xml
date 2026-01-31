@@ -1,0 +1,22 @@
+<launch4jConfig>
+    <dontWrapJar>false</dontWrapJar>
+
+    <headerType>gui</headerType>
+    <outfile>dist/SuperMercadoPDV.exe</outfile>
+    <jar>target/supermercado-pdv-1.0.0.jar</jar>
+
+    <errTitle>SuperMercado PDV</errTitle>
+
+    <jre>
+        <minVersion>17</minVersion>
+        <jdkPreference>preferJre</jdkPreference>
+    </jre>
+
+    <classPath>
+        <mainClass>com.supermercado.SuperMercadoPDV</mainClass>
+    </classPath>
+
+    <jvmOptions>
+        <jvmOption>-Xmx512m</jvmOption>
+    </jvmOptions>
+</launch4jConfig>

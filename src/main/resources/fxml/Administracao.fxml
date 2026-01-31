@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.supermercado.controller.AdministracaoController"
+      prefWidth="1024" prefHeight="768"
+      styleClass="main-container">
+    
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+
+    <Label text="Administração do Sistema" styleClass="page-title"/>
+    
+    <TabPane fx:id="mainTabPane" VBox.vgrow="ALWAYS" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+            <!-- ABA PRODUTOS -->
+            <Tab text="Produtos / Estoque">
+                <VBox spacing="10">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button text="Novo Produto" onAction="#handleNovoProduto" styleClass="btn-success"/>
+                        <Button text="Editar Selecionado" onAction="#handleEditarProduto" styleClass="btn-primary"/>
+                        <Button text="Excluir Selecionado" onAction="#handleExcluirProduto" styleClass="btn-danger"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <TextField fx:id="filtroProdutoField" promptText="Filtrar produtos..." prefWidth="250"/>
+                    </HBox>
+                    <TableView fx:id="produtosTableView" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colProdId" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="colProdCodigo" text="Código" prefWidth="120"/>
+                            <TableColumn fx:id="colProdNome" text="Nome" prefWidth="250"/>
+                            <TableColumn fx:id="colProdCategoria" text="Categoria" prefWidth="150"/>
+                            <TableColumn fx:id="colProdPrecoVenda" text="Preço Venda" prefWidth="100"/>
+                            <TableColumn fx:id="colProdEstoque" text="Estoque" prefWidth="80"/>
+                            <TableColumn fx:id="colProdEstoqueMin" text="Mínimo" prefWidth="80"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- ABA CATEGORIAS -->
+            <Tab text="Categorias">
+                <VBox spacing="10">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button text="Nova Categoria" onAction="#handleNovaCategoria" styleClass="btn-success"/>
+                        <Button text="Editar Selecionada" onAction="#handleEditarCategoria" styleClass="btn-primary"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <TableView fx:id="categoriasTableView" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colCatId" text="ID" prefWidth="100"/>
+                            <TableColumn fx:id="colCatNome" text="Nome" prefWidth="400"/>
+                            <TableColumn fx:id="colCatDesc" text="Descrição" prefWidth="400"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+
+            <!-- ABA USUÁRIOS -->
+            <Tab text="Usuários">
+                <VBox spacing="10">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button text="Novo Usuário" onAction="#handleNovoUsuario" styleClass="btn-success"/>
+                        <Button text="Editar Selecionado" onAction="#handleEditarUsuario" styleClass="btn-primary"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <TableView fx:id="usuariosTableView" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colUserId" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="colUserNome" text="Nome" prefWidth="250"/>
+                            <TableColumn fx:id="colUserLogin" text="Login" prefWidth="150"/>
+                            <TableColumn fx:id="colUserPerfil" text="Perfil" prefWidth="150"/>
+                            <TableColumn fx:id="colUserAtivo" text="Ativo" prefWidth="80"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            
+            <!-- ABA FORNECEDORES -->
+            <Tab text="Fornecedores">
+                <VBox spacing="10">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button text="Novo Fornecedor" onAction="#handleNovoFornecedor" styleClass="btn-success"/>
+                        <Button text="Editar Selecionado" onAction="#handleEditarFornecedor" styleClass="btn-primary"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                    <TableView fx:id="fornecedoresTableView" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colForId" text="ID" prefWidth="50"/>
+                            <TableColumn fx:id="colForNome" text="Nome Fantasia" prefWidth="250"/>
+                            <TableColumn fx:id="colForCnpj" text="CNPJ" prefWidth="150"/>
+                            <TableColumn fx:id="colForEmail" text="Email" prefWidth="200"/>
+                            <TableColumn fx:id="colForFone" text="Telefone" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            
+            <!-- ABA ENTRADA DE MERCADORIA -->
+            <Tab text="Entrada de Mercadoria (Compras)">
+                <VBox spacing="10">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Label text="Lançar Entrada de Produtos" styleClass="total-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Nova Entrada / Nota Fiscal" onAction="#handleNovaEntrada" styleClass="btn-success-big"/>
+                    </HBox>
+                    <Label text="Histórico de Entradas Recentes:" styleClass="form-label" style="-fx-text-fill: black;"/>
+                    <TableView fx:id="entradasTableView" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colEntId" text="ID" prefWidth="80"/>
+                            <TableColumn fx:id="colEntData" text="Data" prefWidth="150"/>
+                            <TableColumn fx:id="colEntFornecedor" text="Fornecedor" prefWidth="250"/>
+                            <TableColumn fx:id="colEntTotal" text="Valor Total" prefWidth="150"/>
+                            <TableColumn fx:id="colEntStatus" text="Status" prefWidth="120"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            
+            <!-- ABA LOGS DE AUDITORIA -->
+            <Tab text="Logs de Auditoria">
+                <VBox spacing="10">
+                    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <Button text="Atualizar" onAction="#handleAtualizarLogs" styleClass="btn-primary"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="Filtrar:"/>
+                        <TextField fx:id="filtroLogField" promptText="Buscar nos logs..." prefWidth="250"/>
+                    </HBox>
+                    <TableView fx:id="logsTableView" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colLogData" text="Data/Hora" prefWidth="150"/>
+                            <TableColumn fx:id="colLogUsuario" text="Usuário" prefWidth="150"/>
+                            <TableColumn fx:id="colLogAcao" text="Ação" prefWidth="120"/>
+                            <TableColumn fx:id="colLogEntidade" text="Entidade" prefWidth="120"/>
+                            <TableColumn fx:id="colLogDescricao" text="Descrição" prefWidth="400"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+        </tabs>
+    </TabPane>
+</VBox>

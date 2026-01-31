@@ -26,7 +26,7 @@ public class SplashScreen extends Preloader {
     public void start(Stage stage) throws Exception {
         this.splashStage = stage;
 
-        // Load App Name from properties
+
         String appName = "SuperMercado PDV";
         try (InputStream input = getClass().getResourceAsStream("/application.properties")) {
             if (input != null) {
@@ -35,16 +35,16 @@ public class SplashScreen extends Preloader {
                 appName = props.getProperty("app.name", appName);
             }
         } catch (Exception e) {
-            // Ignore, use default
+
         }
 
-        // Layout
+
         VBox root = new VBox(20);
         root.setAlignment(Pos.CENTER);
         root.setStyle(
                 "-fx-background-color: white; -fx-padding: 40; -fx-background-radius: 10; -fx-border-radius: 10;");
 
-        // Logo
+
         ImageView logoView = new ImageView();
         try {
             Image logo = new Image(getClass().getResourceAsStream("/images/logo.png"));
@@ -52,31 +52,31 @@ public class SplashScreen extends Preloader {
             logoView.setFitWidth(150);
             logoView.setPreserveRatio(true);
         } catch (Exception e) {
-            // No logo found or error
+
             System.err.println("Logo not found: " + e.getMessage());
         }
 
-        // Title
+
         Label titleLabel = new Label(appName);
         titleLabel.setFont(new Font("Arial", 24));
         titleLabel.setStyle("-fx-text-fill: #333333; -fx-font-weight: bold;");
 
-        // Progress Bar
+
         ProgressBar progressBar = new ProgressBar();
         progressBar.setPrefWidth(200);
         progressBar.setStyle("-fx-accent: #007bff;");
 
         root.getChildren().addAll(logoView, titleLabel, progressBar);
 
-        // Scene with transparent background
+
         Scene scene = new Scene(root, 400, 300);
         scene.setFill(Color.TRANSPARENT);
 
-        // Stage setup
+
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setScene(scene);
 
-        // Add shadow for better look
+
         root.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.2)));
 
         stage.centerOnScreen();

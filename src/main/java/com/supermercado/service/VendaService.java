@@ -26,11 +26,13 @@ public class VendaService {
     private static final Logger logger = LoggerFactory.getLogger(VendaService.class);
     private final VendaRepository vendaRepository;
     private final ProdutoService produtoService;
+    private final LogService logService;
 
     @Autowired
-    public VendaService(VendaRepository vendaRepository, ProdutoService produtoService) {
+    public VendaService(VendaRepository vendaRepository, ProdutoService produtoService, LogService logService) {
         this.vendaRepository = vendaRepository;
         this.produtoService = produtoService;
+        this.logService = logService;
     }
 
     /**
@@ -159,6 +161,14 @@ public class VendaService {
 
         logger.info("Venda finalizada com sucesso: ID {}, Total: {}",
                 vendaSalva.getId(), vendaSalva.getTotal());
+
+        // Registra log detalhado da venda
+        Usuario usuario = vendaSalva.getUsuario();
+        if (usuario != null) {
+            String descricao = String.format("Venda finalizada - Total: R$ %.2f | Forma Pagamento: %s | Valor Pago: R$ %.2f | Troco: R$ %.2f | Itens: %d",
+                    vendaSalva.getTotal(), formaPagamento, valorPago, vendaSalva.getTroco(), vendaSalva.getItens().size());
+            logService.registrarLog(usuario, LogAcao.TipoAcao.VENDA_FINALIZADA, "Venda", vendaSalva.getId(), descricao);
+        }
 
         return vendaSalva;
     }

@@ -6,6 +6,7 @@ import com.supermercado.service.ProdutoService;
 import com.supermercado.service.VendaService;
 import com.supermercado.service.UsuarioService;
 import com.supermercado.service.SessaoService;
+import com.supermercado.service.ConfigService;
 import com.supermercado.util.*;
 import com.supermercado.service.RelatorioService;
 import java.util.List;
@@ -17,6 +18,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
@@ -44,6 +48,7 @@ public class MainController {
     private final VendaService vendaService;
     private final SessaoService sessaoService;
     private final RelatorioService relatorioService;
+    private final ConfigService configService;
 
     // Toolbar
     @FXML
@@ -89,12 +94,13 @@ public class MainController {
 
     @Autowired
     public MainController(UsuarioService usuarioService, ProdutoService produtoService, VendaService vendaService,
-            SessaoService sessaoService, RelatorioService relatorioService) {
+            SessaoService sessaoService, RelatorioService relatorioService, ConfigService configService) {
         this.usuarioService = usuarioService;
         this.produtoService = produtoService;
         this.vendaService = vendaService;
         this.sessaoService = sessaoService;
         this.relatorioService = relatorioService;
+        this.configService = configService;
     }
 
     @FXML
@@ -125,6 +131,22 @@ public class MainController {
 
         // Atalhos de teclado
         Platform.runLater(this::configurarAtalhos);
+
+        // Carrega configurações (tema)
+        Platform.runLater(this::carregarConfiguracoes);
+    }
+
+    private void carregarConfiguracoes() {
+        if (finalizarButton.getScene() != null) {
+            Scene scene = finalizarButton.getScene();
+            Parent root = scene.getRoot();
+            
+            // Aplica tema salvo
+            if (configService.isDarkMode()) {
+                root.getStyleClass().add("dark-mode");
+                logger.info("Tema dark mode carregado das configurações");
+            }
+        }
     }
 
     private void iniciarRelogio() {
@@ -205,16 +227,31 @@ public class MainController {
 
     @FXML
     private void handleAdicionarProduto() {
-        String codigo = codigoBarrasField.getText().trim();
+        String input = codigoBarrasField.getText().trim();
         String qtdStr = quantidadeField.getText().trim();
 
-        if (codigo.isEmpty()) {
+        if (input.isEmpty()) {
             DialogUtil.showWarning("Atenção", "Digite o código de barras do produto");
             return;
         }
 
+        String codigo = input;
+        int quantidade = 1;
+
         try {
-            int quantidade = Integer.parseInt(qtdStr.isEmpty() ? "1" : qtdStr);
+            // Suporte para o formato Q*CODIGO (ex: 2*4242945258)
+            if (input.contains("*")) {
+                String[] partes = input.split("\\*");
+                if (partes.length == 2) {
+                    quantidade = Integer.parseInt(partes[0].trim());
+                    codigo = partes[1].trim();
+                } else {
+                    DialogUtil.showWarning("Formato Inválido", "Use o formato QUANTIDADE*CODIGO");
+                    return;
+                }
+            } else {
+                quantidade = Integer.parseInt(qtdStr.isEmpty() ? "1" : qtdStr);
+            }
 
             if (quantidade <= 0) {
                 DialogUtil.showWarning("Atenção", "Quantidade deve ser maior que zero");
@@ -229,10 +266,10 @@ public class MainController {
             quantidadeField.setText("1");
             codigoBarrasField.requestFocus();
 
-            logger.info("Produto adicionado: {}", codigo);
+            logger.info("Produto adicionado: {}, Quantidade: {}", codigo, quantidade);
 
         } catch (NumberFormatException e) {
-            DialogUtil.showError("Erro", "Quantidade inválida");
+            DialogUtil.showError("Erro", "Quantidade inválida no formato de entrada");
         } catch (Exception e) {
             DialogUtil.showException("Erro ao adicionar produto", e);
             logger.error("Erro ao adicionar produto", e);
@@ -241,23 +278,37 @@ public class MainController {
 
     @FXML
     private void handleBuscarProduto() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Buscar Produto");
-        dialog.setHeaderText("Digite o nome ou parte do nome do produto:");
-        dialog.setContentText("Nome:");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/BuscaProduto.fxml"));
+            loader.setControllerFactory(SuperMercadoApp.getSpringContext()::getBean);
+            Parent root = loader.load();
 
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(nome -> {
-            List<Produto> produtos = produtoService.buscarPorNome(nome);
-            if (produtos.isEmpty()) {
-                DialogUtil.showInfo("Busca", "Nenhum produto encontrado com o nome: " + nome);
-            } else {
-                // Seleciona o primeiro encontrado para simplificar o PDV
-                Produto p = produtos.get(0);
-                codigoBarrasField.setText(p.getCodigoBarras());
-                quantidadeField.requestFocus();
+            BuscaProdutoController controller = loader.getController();
+
+            Stage stage = new Stage();
+            stage.setTitle("Buscar Produto");
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+
+            // Aplica tema atual ao diálogo
+            if (finalizarButton.getScene().getRoot().getStyleClass().contains("dark-mode")) {
+                root.getStyleClass().add("dark-mode");
             }
-        });
+
+            stage.setScene(scene);
+            stage.showAndWait();
+
+            Produto p = controller.getProdutoSelecionado();
+            if (p != null) {
+                codigoBarrasField.setText(p.getCodigoBarras());
+                quantidadeField.setText(String.valueOf(controller.getQuantidade()));
+                handleAdicionarProduto();
+            }
+        } catch (Exception e) {
+            logger.error("Erro ao abrir busca de produtos", e);
+            DialogUtil.showException("Erro ao abrir busca", e);
+        }
     }
 
     @FXML
@@ -382,32 +433,17 @@ public class MainController {
 
     @FXML
     private void handleProdutos() {
-        if (sessaoService.temPermissao(Usuario.TipoPerfil.ADMINISTRADOR, Usuario.TipoPerfil.GERENTE)) {
-            DialogUtil.showInfo("Módulo de Produtos",
-                    "O gerenciamento de produtos pode ser feito via Banco de Dados ou aguarde a próxima atualização da UI.");
-        } else {
-            exibirAlerta("Acesso Negado", "Você não tem permissão para acessar o cadastro de produtos.");
-        }
+        abrirAdministracao(0);
     }
 
     @FXML
     private void handleCategorias() {
-        if (sessaoService.temPermissao(Usuario.TipoPerfil.ADMINISTRADOR, Usuario.TipoPerfil.GERENTE)) {
-            DialogUtil.showInfo("Módulo de Categorias",
-                    "O gerenciamento de categorias está disponível via persistência direta no momento.");
-        } else {
-            exibirAlerta("Acesso Negado", "Você não tem permissão para acessar o cadastro de categorias.");
-        }
+        abrirAdministracao(1);
     }
 
     @FXML
     private void handleUsuarios() {
-        if (sessaoService.temPermissao(Usuario.TipoPerfil.ADMINISTRADOR)) {
-            DialogUtil.showInfo("Módulo de Usuários",
-                    "O gerenciamento de usuários é restrito ao Administrador via console/DB nesta versão.");
-        } else {
-            exibirAlerta("Acesso Negado", "Apenas administradores podem gerenciar usuários.");
-        }
+        abrirAdministracao(2);
     }
 
     @FXML
@@ -465,19 +501,42 @@ public class MainController {
 
     @FXML
     private void handleFornecedores() {
-        if (sessaoService.temPermissao(Usuario.TipoPerfil.ADMINISTRADOR, Usuario.TipoPerfil.GERENTE)) {
-            exibirAlerta("Informação", "Módulo de Fornecedores em desenvolvimento.");
-        } else {
-            exibirAlerta("Acesso Negado", "Você não tem permissão para gerenciar fornecedores.");
-        }
+        abrirAdministracao(3);
     }
 
     @FXML
     private void handleCompras() {
-        if (sessaoService.temPermissao(Usuario.TipoPerfil.ADMINISTRADOR, Usuario.TipoPerfil.GERENTE)) {
-            exibirAlerta("Informação", "Módulo de Compras (Entrada de Estoque) em desenvolvimento.");
-        } else {
-            exibirAlerta("Acesso Negado", "Você não tem permissão para realizar compras.");
+        abrirAdministracao(4);
+    }
+
+    private void abrirAdministracao(int tabIndex) {
+        if (!sessaoService.temPermissao(Usuario.TipoPerfil.ADMINISTRADOR, Usuario.TipoPerfil.GERENTE)) {
+            exibirAlerta("Acesso Negado", "Você não tem permissão para esta funcionalidade.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Administracao.fxml"));
+            loader.setControllerFactory(SuperMercadoApp.getSpringContext()::getBean);
+            Parent root = loader.load();
+
+            AdministracaoController controller = loader.getController();
+            controller.setTab(tabIndex);
+
+            Stage stage = new Stage();
+            stage.setTitle("Administração - SuperMercado");
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
+
+            if (finalizarButton.getScene().getRoot().getStyleClass().contains("dark-mode")) {
+                root.getStyleClass().add("dark-mode");
+            }
+
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            logger.error("Erro ao abrir administração", e);
+            DialogUtil.showException("Erro ao abrir administração", e);
         }
     }
 
@@ -491,16 +550,43 @@ public class MainController {
 
     @FXML
     private void handleSobre() {
-        DialogUtil.showInfo("Sobre",
-                "SuperMercado PDV v1.0\n\n" +
-                        "Sistema completo de Ponto de Venda\n" +
-                        "Desenvolvido em JavaFX com Spring Boot e JPA/Hibernate");
+        DialogUtil.showInfo("Ajuda & Sobre",
+                "SuperMercado PDV v1.5 - Sistema Profissional\n\n" +
+                        "Funcionalidades Implementadas:\n" +
+                        "- Ponto de Venda (PDV) com suporte a Q*CODIGO\n" +
+                        "- Busca avançada de produtos com filtros\n" +
+                        "- Gerenciamento de Estoque e Alertas de Nível Baixo\n" +
+                        "- Cadastro de Produtos, Categorias e Usuários\n" +
+                        "- Gestão de Fornecedores e Entrada de Mercadorias\n" +
+                        "- Relatórios Financeiros e Ranking de Produtos\n" +
+                        "- Suporte a Modo Escuro (Dark Mode)\n" +
+                        "- Impressão de Comprovantes em PDF\n\n" +
+                        "Tecnologias: JavaFX, Spring Boot, JPA/Hibernate, SQLite.");
     }
 
     private void handleAlternarTelaCheia() {
         if (finalizarButton.getScene() != null && finalizarButton.getScene().getWindow() instanceof Stage) {
             Stage stage = (Stage) finalizarButton.getScene().getWindow();
             stage.setFullScreen(!stage.isFullScreen());
+        }
+    }
+
+    @FXML
+    private void handleAlternarTema() {
+        if (finalizarButton.getScene() != null) {
+            Scene scene = finalizarButton.getScene();
+            Parent root = scene.getRoot();
+            boolean isDarkMode = root.getStyleClass().contains("dark-mode");
+            
+            if (isDarkMode) {
+                root.getStyleClass().remove("dark-mode");
+                configService.setDarkMode(false);
+                logger.info("Tema alterado para Light Mode e salvo");
+            } else {
+                root.getStyleClass().add("dark-mode");
+                configService.setDarkMode(true);
+                logger.info("Tema alterado para Dark Mode e salvo");
+            }
         }
     }
 

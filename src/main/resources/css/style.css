@@ -276,3 +276,78 @@
 .scroll-bar .thumb:hover {
     -fx-background-color: #9E9E9E;
 }
+
+/* ========== DARK MODE ========== */
+.dark-mode {
+    -fx-primary-color: #64B5F6;
+    -fx-primary-dark: #2196F3;
+    -fx-background-color: #121212;
+    -fx-text-fill: #E0E0E0;
+}
+
+.dark-mode .main-container {
+    -fx-background-color: #1E1E1E;
+}
+
+.dark-mode .toolbar {
+    -fx-background-color: #263238;
+    -fx-border-color: #37474F;
+}
+
+.dark-mode .toolbar-label {
+    -fx-text-fill: #90CAF9;
+}
+
+.dark-mode .page-title {
+    -fx-fill: #FFFFFF;
+}
+
+.dark-mode .form-label {
+    -fx-text-fill: #E0E0E0;
+}
+
+.dark-mode .total-label,
+.dark-mode .total-label-big {
+    -fx-text-fill: #FFFFFF;
+}
+
+.dark-mode .table-view {
+    -fx-background-color: #2D2D2D;
+    -fx-border-color: #404040;
+}
+
+.dark-mode .table-row-cell:odd {
+    -fx-background-color: #242424;
+}
+
+.dark-mode .table-row-cell:even {
+    -fx-background-color: #1E1E1E;
+}
+
+.dark-mode .table-row-cell {
+    -fx-text-fill: #E0E0E0;
+}
+
+.dark-mode .table-row-cell:selected {
+    -fx-background-color: #37474F;
+}
+
+.dark-mode .text-field,
+.dark-mode .password-field {
+    -fx-background-color: #2D2D2D;
+    -fx-text-fill: white;
+    -fx-border-color: #555555;
+}
+
+.dark-mode .menu-bar {
+    -fx-background-color: #212121;
+}
+
+.dark-mode .context-menu {
+    -fx-background-color: #2D2D2D;
+    -fx-border-color: #404040;
+}
+
+.dark-mode .context-menu .label {
+    -fx-text-fill: #E0E0E0;
+}

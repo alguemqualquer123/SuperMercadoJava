@@ -1,6 +1,8 @@
 package com.supermercado.service;
 
 import com.supermercado.model.Categoria;
+import com.supermercado.model.LogAcao;
+import com.supermercado.model.Usuario;
 import com.supermercado.repository.CategoriaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +21,14 @@ public class CategoriaService {
 
     private static final Logger logger = LoggerFactory.getLogger(CategoriaService.class);
     private final CategoriaRepository categoriaRepository;
+    private final LogService logService;
+    private final UsuarioService usuarioService;
 
     @Autowired
-    public CategoriaService(CategoriaRepository categoriaRepository) {
+    public CategoriaService(CategoriaRepository categoriaRepository, LogService logService, UsuarioService usuarioService) {
         this.categoriaRepository = categoriaRepository;
+        this.logService = logService;
+        this.usuarioService = usuarioService;
     }
 
     /**
@@ -39,6 +45,17 @@ public class CategoriaService {
         try {
             Categoria saved = categoriaRepository.save(categoria);
             logger.info("Categoria salva com sucesso: ID {}", saved.getId());
+            
+            // Registra log
+            Usuario usuario = usuarioService.getUsuarioLogado();
+            if (usuario != null) {
+                String descricao = String.format("Categoria %s: %s", 
+                    categoria.getId() == null ? "cadastrada" : "atualizada", saved.getNome());
+                logService.registrarLog(usuario, 
+                    categoria.getId() == null ? LogAcao.TipoAcao.CREATE : LogAcao.TipoAcao.UPDATE,
+                    "Categoria", saved.getId(), descricao);
+            }
+            
             return saved;
         } catch (Exception e) {
             logger.error("Erro ao salvar categoria", e);
@@ -76,9 +93,17 @@ public class CategoriaService {
 
         Optional<Categoria> categoria = categoriaRepository.findById(id);
         if (categoria.isPresent()) {
-            categoria.get().setAtivo(false);
-            categoriaRepository.save(categoria.get());
+            Categoria c = categoria.get();
+            c.setAtivo(false);
+            categoriaRepository.save(c);
             logger.info("Categoria desativada: ID {}", id);
+            
+            // Registra log
+            Usuario usuario = usuarioService.getUsuarioLogado();
+            if (usuario != null) {
+                String descricao = String.format("Categoria desativada: %s (ID: %d)", c.getNome(), c.getId());
+                logService.registrarLog(usuario, LogAcao.TipoAcao.DELETE, "Categoria", c.getId(), descricao);
+            }
         } else {
             throw new IllegalArgumentException("Categoria não encontrada: ID " + id);
         }

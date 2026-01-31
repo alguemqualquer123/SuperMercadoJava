@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.supermercado.controller.BuscaProdutoController"
+      prefWidth="600" prefHeight="400"
+      styleClass="main-container">
+    
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+
+    <Label text="Pesquisar Produto" styleClass="page-title"/>
+    
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Filtro:" styleClass="form-label"/>
+        <TextField fx:id="filtroField" promptText="Nome ou código de barras..." HBox.hgrow="ALWAYS"/>
+    </HBox>
+    
+    <TableView fx:id="produtosTableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colCodigo" text="Código" prefWidth="120"/>
+            <TableColumn fx:id="colNome" text="Nome" prefWidth="250"/>
+            <TableColumn fx:id="colPreco" text="Preço" prefWidth="80"/>
+            <TableColumn fx:id="colEstoque" text="Estoque" prefWidth="80"/>
+        </columns>
+    </TableView>
+    
+    <HBox spacing="15" alignment="CENTER_RIGHT">
+        <Label text="Quantidade:" styleClass="form-label"/>
+        <TextField fx:id="quantidadeField" text="1" prefWidth="60"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Cancelar" onAction="#handleCancelar" styleClass="btn-secondary"/>
+        <Button text="Adicionar à Venda" onAction="#handleAdicionar" styleClass="btn-primary"/>
+    </HBox>
+</VBox>

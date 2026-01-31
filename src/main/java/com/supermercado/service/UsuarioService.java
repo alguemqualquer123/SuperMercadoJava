@@ -138,6 +138,10 @@ public class UsuarioService {
         return usuarioRepository.findAtivos();
     }
 
+    public List<Usuario> listarTodos() {
+        return usuarioRepository.findAll();
+    }
+
     /**
      * Registra log de ação
      */
@@ -150,6 +154,51 @@ public class UsuarioService {
         } catch (Exception e) {
             logger.error("Erro ao registrar log", e);
         }
+    }
+
+    /**
+     * Atualiza um usuário
+     */
+    @Transactional
+    public Usuario atualizar(Usuario usuario) {
+        logger.debug("Atualizando usuário: ID {}", usuario.getId());
+
+        if (usuario.getId() == null) {
+            throw new IllegalArgumentException("ID do usuário não pode ser nulo para atualização");
+        }
+
+        try {
+            Usuario updated = usuarioRepository.save(usuario);
+            logger.info("Usuário atualizado com sucesso: ID {}", updated.getId());
+            return updated;
+        } catch (Exception e) {
+            logger.error("Erro ao atualizar usuário", e);
+            throw new RuntimeException("Erro ao atualizar usuário: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Desativa um usuário (soft delete)
+     */
+    @Transactional
+    public void desativar(Long id) {
+        logger.debug("Desativando usuário: ID {}", id);
+
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
+        if (usuario.isPresent()) {
+            usuario.get().setAtivo(false);
+            usuarioRepository.save(usuario.get());
+            logger.info("Usuário desativado: ID {}", id);
+        } else {
+            throw new IllegalArgumentException("Usuário não encontrado: ID " + id);
+        }
+    }
+
+    /**
+     * Busca usuário por ID
+     */
+    public Optional<Usuario> buscarPorId(Long id) {
+        return usuarioRepository.findById(id);
     }
 
     /**

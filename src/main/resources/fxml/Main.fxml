@@ -46,6 +46,7 @@
                 </padding>
                 <Label fx:id="usuarioLabel" text="Usuário: " styleClass="toolbar-label"/>
                 <Region HBox.hgrow="ALWAYS"/>
+                <Button text="🌓 Alternar Tema" onAction="#handleAlternarTema" styleClass="btn-secondary"/>
                 <Label fx:id="dataHoraLabel" text="Data/Hora" styleClass="toolbar-label"/>
             </HBox>
         </VBox>

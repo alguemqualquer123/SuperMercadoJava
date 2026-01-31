@@ -1,6 +1,8 @@
 package com.supermercado.service;
 
+import com.supermercado.model.LogAcao;
 import com.supermercado.model.Produto;
+import com.supermercado.model.Usuario;
 import com.supermercado.repository.ProdutoRepository;
 import com.supermercado.util.Validador;
 import org.slf4j.Logger;
@@ -20,10 +22,14 @@ public class ProdutoService {
 
     private static final Logger logger = LoggerFactory.getLogger(ProdutoService.class);
     private final ProdutoRepository produtoRepository;
+    private final LogService logService;
+    private final UsuarioService usuarioService;
 
     @Autowired
-    public ProdutoService(ProdutoRepository produtoRepository) {
+    public ProdutoService(ProdutoRepository produtoRepository, LogService logService, UsuarioService usuarioService) {
         this.produtoRepository = produtoRepository;
+        this.logService = logService;
+        this.usuarioService = usuarioService;
     }
 
     /**
@@ -44,6 +50,19 @@ public class ProdutoService {
         try {
             Produto saved = produtoRepository.save(produto);
             logger.info("Produto salvo com sucesso: ID {}", saved.getId());
+            
+            // Registra log
+            Usuario usuario = usuarioService.getUsuarioLogado();
+            if (usuario != null) {
+                String acao = produto.getId() == null ? "CREATE" : "UPDATE";
+                String descricao = String.format("Produto %s: %s (Código: %s, Preço: R$ %.2f)", 
+                    produto.getId() == null ? "cadastrado" : "atualizado",
+                    saved.getNome(), saved.getCodigoBarras(), saved.getPrecoVenda());
+                logService.registrarLog(usuario, 
+                    produto.getId() == null ? LogAcao.TipoAcao.CREATE : LogAcao.TipoAcao.UPDATE,
+                    "Produto", saved.getId(), descricao);
+            }
+            
             return saved;
         } catch (Exception e) {
             logger.error("Erro ao salvar produto", e);
@@ -67,6 +86,14 @@ public class ProdutoService {
         try {
             Produto updated = produtoRepository.save(produto);
             logger.info("Produto atualizado com sucesso: ID {}", updated.getId());
+            
+            // Registra log
+            Usuario usuario = usuarioService.getUsuarioLogado();
+            if (usuario != null) {
+                String descricao = String.format("Produto atualizado: %s (ID: %d)", updated.getNome(), updated.getId());
+                logService.registrarLog(usuario, LogAcao.TipoAcao.UPDATE, "Produto", updated.getId(), descricao);
+            }
+            
             return updated;
         } catch (Exception e) {
             logger.error("Erro ao atualizar produto", e);
@@ -83,9 +110,17 @@ public class ProdutoService {
 
         Optional<Produto> produto = produtoRepository.findById(id);
         if (produto.isPresent()) {
-            produto.get().setAtivo(false);
-            produtoRepository.save(produto.get());
+            Produto p = produto.get();
+            p.setAtivo(false);
+            produtoRepository.save(p);
             logger.info("Produto desativado: ID {}", id);
+            
+            // Registra log
+            Usuario usuario = usuarioService.getUsuarioLogado();
+            if (usuario != null) {
+                String descricao = String.format("Produto desativado: %s (ID: %d)", p.getNome(), p.getId());
+                logService.registrarLog(usuario, LogAcao.TipoAcao.DELETE, "Produto", p.getId(), descricao);
+            }
         } else {
             throw new IllegalArgumentException("Produto não encontrado: ID " + id);
         }
@@ -110,6 +145,10 @@ public class ProdutoService {
      */
     public List<Produto> listarAtivos() {
         return produtoRepository.findAtivos();
+    }
+
+    public List<Produto> listarTodos() {
+        return produtoRepository.findAll();
     }
 
     /**

@@ -25,9 +25,9 @@
     </HBox>
 
     <HBox spacing="20" VBox.vgrow="ALWAYS">
-        <BarChart fx:id="vendasChart" title="Vendas por Categoria">
+        <BarChart fx:id="vendasChart" title="Ranking de Produtos Mais Vendidos">
             <xAxis>
-                <CategoryAxis label="Categorias"/>
+                <CategoryAxis label="Produtos"/>
             </xAxis>
             <yAxis>
                 <NumberAxis label="Valor (R$)"/>

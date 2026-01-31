@@ -1,6 +1,5 @@
 package com.supermercado;
 
-import com.supermercado.service.UsuarioService;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +26,10 @@ public class SuperMercadoApp extends Application {
     public void init() {
         logger.info("Iniciando contexto Spring Boot...");
         springContext = SpringApplication.run(SuperMercadoApp.class);
+    }
+
+    public static ConfigurableApplicationContext getSpringContext() {
+        return springContext;
     }
 
     @Override
@@ -78,7 +81,7 @@ public class SuperMercadoApp extends Application {
      */
     public static void showMain() {
         try {
-            // Fecha a janela de login
+
             primaryStage.setFullScreen(false);
             primaryStage.hide();
 
@@ -89,14 +92,14 @@ public class SuperMercadoApp extends Application {
             Stage mainStage = new Stage();
             mainStage.setTitle("Painel Principal - SuperMercado PDV");
 
-            // Define o tamanho preferencial
+
             Scene scene = new Scene(root, 1280, 800);
             scene.getStylesheets().add(SuperMercadoApp.class.getResource("/css/style.css").toExternalForm());
 
             mainStage.setScene(scene);
             mainStage.setMaximized(true);
 
-            // Ao fechar a principal, encerra a aplicação
+
             mainStage.setOnCloseRequest(event -> Platform.exit());
 
             mainStage.show();
