@@ -7,6 +7,7 @@ import com.supermercado.repository.CategoriaRepository;
 import com.supermercado.repository.FornecedorRepository;
 import com.supermercado.repository.ProdutoRepository;
 import com.supermercado.repository.UsuarioRepository;
+import com.supermercado.service.ConfigService;
 import com.supermercado.service.UsuarioService;
 
 import org.slf4j.Logger;
@@ -32,6 +33,8 @@ public class DatabaseSeeder implements CommandLineRunner {
     private final ProdutoRepository produtoRepository;
     private final FornecedorRepository fornecedorRepository;
     @Autowired
+    private ConfigService configService;
+    @Autowired
     private UsuarioService usuarioService;
 
     public DatabaseSeeder(CategoriaRepository categoriaRepository,
@@ -46,24 +49,21 @@ public class DatabaseSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         logger.info("Verificando necessidade de popular dados de teste...");
 
-        logger.info("Quantidade de categorias | Ele senta " + categoriaRepository.count());
-        if (categoriaRepository.count() == 0) {
-            seedCategorias();
+        if (configService.isDebugData()) {
+            logger.info("Quantidade de categorias | Ele senta " + categoriaRepository.count());
+            if (categoriaRepository.count() == 0) {
+                seedCategorias();
+            }
+            logger.info("Quantidade de fornecedores | Ele senta " + categoriaRepository.count());
+            if (fornecedorRepository.count() == 0) {
+                seedFornecedores();
+            }
+            logger.info("Quantidade de produtos | Ele senta " + categoriaRepository.count());
+            if (produtoRepository.count() == 0) {
+                seedProdutos();
+            }
+            usuarioService.criarUsuarioAdminSeNaoExistir();
         }
-
-        logger.info("Quantidade de fornecedores | Ele senta " + categoriaRepository.count());
-        if (fornecedorRepository.count() == 0) {
-            seedFornecedores();
-        }
-
-        logger.info("Quantidade de produtos | Ele senta " + categoriaRepository.count());
-        if (produtoRepository.count() == 0) {
-            seedProdutos();
-        }
-
-
-
-        usuarioService.criarUsuarioAdminSeNaoExistir();
     }
 
     private void seedCategorias() {

@@ -108,5 +108,26 @@ public class ConfigService {
         properties.setProperty(key, value);
         salvarConfiguracoes();
     }
+
+
+    /**
+     * Adivar e desativar dados falsos em configurações
+     */
+    public void activeDebugData() {
+        properties.setProperty("debugData", "true");
+        logger.info("debugData ativado");
+    }
+
+    /**
+     * Adivar e desativar dados falsos em configurações
+     */
+    public void unableDebugData() {
+        properties.setProperty("debugData", "false");
+        logger.info("debugData ativado");
+    }
+
+    public Boolean isDebugData() {
+        return  Boolean.parseBoolean(properties.getProperty("debugData", "false"));
+    }
 }
 
